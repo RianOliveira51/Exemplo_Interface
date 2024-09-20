@@ -30,7 +30,8 @@ public class Invoice {
         this.tax = tax;
     }
 
+    //calculando o valor total com o imposto.
     public double getTotalPayment(){
-        return getBasicPayment() - getTax();
+        return getBasicPayment() + getTax();
     }
 }

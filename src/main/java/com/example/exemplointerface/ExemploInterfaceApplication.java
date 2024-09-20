@@ -2,6 +2,8 @@ package com.example.exemplointerface;
 
 import com.example.exemplointerface.entities.CarRental;
 import com.example.exemplointerface.entities.Vehicle;
+import com.example.exemplointerface.service.BrazilTaxService;
+import com.example.exemplointerface.service.RentalService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -31,14 +33,38 @@ public class ExemploInterfaceApplication {
         System.out.println("Entre com os dados do aluguel");
         System.out.print("Modelo do carro: ");
         String carModel = sc.nextLine();
-        System.out.println("Retirada (dd/MM/yyyy hh:mm): ");
+        System.out.print("Retirada (dd/MM/yyyy hh:mm): ");
         LocalDateTime start = LocalDateTime.parse(sc.nextLine(), fmt);
-        System.out.println("Return (dd/MM/yyyy hh:mm): ");
+        System.out.print("Return (dd/MM/yyyy hh:mm): ");
         LocalDateTime finish = LocalDateTime.parse(sc.nextLine(), fmt);
 
         //Como o nome do veiculo é uma associação entre Vehcicle com CarRental, e no CarRental ele é um objeto.
         //temos que inicial o Veihcle para poder pasar o nome do veiculo
         CarRental cr = new CarRental(start, finish, new Vehicle(carModel));
+
+        /* testando os serviços do BrazilTaxService
+        BrazilTaxService taxService = new BrazilTaxService();
+
+        System.out.println(taxService.tax(50.0));
+        */
+
+        //Testando RentalService
+
+        System.out.print("Entre com o preço por hora: ");
+        double pricePerHour = sc.nextDouble();
+        System.out.print("Entre com preço por dia: ");
+        double pricePerDay = sc.nextDouble();
+
+        RentalService rentalService = new RentalService(pricePerHour, pricePerDay, new BrazilTaxService());
+
+        rentalService.processInvoice(cr);
+        System.out.println("Fatura:");
+        System.out.println("Pagamento basico: " + String.format("%.2f",cr.getInvoice().getBasicPayment()));
+        System.out.println("Imposto: " + String.format("%.2f",cr.getInvoice().getTax()));
+        System.out.println("Pagamento total: " + String.format("%.2f",cr.getInvoice().getTotalPayment()));
+
+
+
         sc.close();
     }
 
